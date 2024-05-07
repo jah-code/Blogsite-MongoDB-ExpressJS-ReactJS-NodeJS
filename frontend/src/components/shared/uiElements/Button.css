@@ -9,9 +9,14 @@
     border-radius: 20px;
 }
 
-.button:hover {
+.button:hover(:not-disabled) {
     background-color: transparent;
     border: 1px solid #8fac8f;
     color: #8fac8f;
     cursor: pointer;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    background-color: #b4b8b4;
 }

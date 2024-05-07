@@ -1,0 +1,10 @@
+.blog-form {
+    list-style: none;
+    margin: 0 auto;
+    padding: 1rem;
+    width: 90%;
+    max-width: 40rem;
+    box-shadow: 0 2px 8px #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}

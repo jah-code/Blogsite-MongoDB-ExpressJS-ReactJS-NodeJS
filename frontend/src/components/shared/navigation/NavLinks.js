@@ -22,7 +22,7 @@ function NavLinks() {
           <NavLink to="/my-blogs">My Blogs</NavLink>
         </li>
         <li>
-          <NavLink to="/add-blog">Add Blog</NavLink>
+          <NavLink to="/my-blogs/add-new">Add Blog</NavLink>
         </li>
       </ul>
       {/* <button>Logout</button> */}
