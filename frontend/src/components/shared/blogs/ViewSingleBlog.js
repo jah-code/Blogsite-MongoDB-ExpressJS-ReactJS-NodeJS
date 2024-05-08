@@ -1,10 +1,13 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import Card from "../uiElements/Card";
 import Button from "../uiElements/Button";
 import Modal from "../uiElements/Modal";
 import Map from "../uiElements/Map";
+import { AuthContext } from "../context/auth-context";
 
 function ViewSingleBlog(props) {
+  const auth = useContext(AuthContext);
+  const { isLoggedIn } = auth;
   const { id, image, category, author, title, description, others } = props;
 
   const [showMap, setShowMap] = useState(false);
@@ -34,8 +37,12 @@ function ViewSingleBlog(props) {
             {category === "travel" && (
               <Button onClick={openMapHandler}>View Map</Button>
             )}
-            <Button>Edit</Button>
-            <Button>Delete</Button>
+            {isLoggedIn && (
+              <Fragment>
+                <Button>Edit</Button>
+                <Button>Delete</Button>
+              </Fragment>
+            )}
           </div>
         </Card>
       </div>

@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from "react";
+import React from "react";
 import Input from "../components/shared/forms/Input";
 import Button from "../components/shared/uiElements/Button";
 import "./NewBlog.css";
@@ -6,35 +6,11 @@ import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../components/shared/util/validators";
+import { useForm } from "../components/shared/hooks/form-hook";
 
 function NewBlog() {
-  const formReducer = (state, action) => {
-    switch (action.type) {
-      case "INPUT_CHANGE":
-        let formIsValid = true;
-        for (const inputId in state.inputs) {
-          if (inputId === action.inputId) {
-            formIsValid = formIsValid && action.isValid;
-          } else {
-            formIsValid = formIsValid && state.inputs[inputId].isValid;
-          }
-        }
-
-        return {
-          ...state,
-          inputs: {
-            ...state.inputs,
-            [action.inputId]: { value: action.value, isValid: action.isValid },
-          },
-          isValid: formIsValid,
-        };
-      default:
-        return state;
-    }
-  };
-
-  const initialState = {
-    inputs: {
+  const [formState, onInputHandler] = useForm(
+    {
       title: {
         value: "",
         isValid: false,
@@ -44,30 +20,16 @@ function NewBlog() {
         isValid: false,
       },
     },
-    isValid: false,
-  };
-
-  const [formState, dispatch] = useReducer(formReducer, initialState);
-
-  const onInputHandler = useCallback(
-    (id, value, isValid) => {
-      dispatch({
-        type: "INPUT_CHANGE",
-        value: value,
-        isValid: isValid,
-        inputId: id,
-      });
-    },
-    [dispatch]
+    false
   );
 
-  const onSubmitHandler = (e) => {
+  const onSubmitAddHandler = (e) => {
     e.preventDefault();
     console.log("add blog", formState.inputs);
   };
 
   return (
-    <form className="blog-form" onSubmit={onSubmitHandler}>
+    <form className="blog-form" onSubmit={onSubmitAddHandler}>
       <Input
         id="title"
         element="input"

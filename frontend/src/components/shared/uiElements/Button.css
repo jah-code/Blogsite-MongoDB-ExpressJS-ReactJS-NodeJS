@@ -9,7 +9,10 @@
     border-radius: 20px;
 }
 
-.button:hover(:not-disabled) {
+.button:hover,
+.button:active
+.button:hover:enabled,
+.button:active:enabled {
     background-color: transparent;
     border: 1px solid #8fac8f;
     color: #8fac8f;
