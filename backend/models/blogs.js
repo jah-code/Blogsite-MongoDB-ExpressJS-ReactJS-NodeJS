@@ -8,7 +8,7 @@ const blogSchema = new Schema({
   image: { type: String, required: true },
   category: { type: String, required: true },
   date: { type: String, required: true },
-  author: { type: String, required: true },
+  author: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   address: { type: String },
   coordinates: {
     lat: { type: Number },

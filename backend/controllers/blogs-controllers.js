@@ -1,7 +1,9 @@
 const HttpError = require("../models/http-error");
-const BlogsModel = require("../models/blogs");
 const { validationResult } = require("express-validator");
 const getCoordinates = require("../util/location");
+const BlogsModel = require("../models/blogs");
+const UsersModel = require("../models/users");
+const mongoose = require("mongoose");
 
 const getBlogById = async (req, res, next) => {
   const blogId = req.params.id;
@@ -27,23 +29,24 @@ const getBlogById = async (req, res, next) => {
 const getBlogByUserId = async (req, res, next) => {
   const userId = req.params.id;
 
-  let blogs;
-
+  let userWithBlogs;
   try {
-    blogs = await BlogsModel.find({ author: userId });
+    userWithBlogs = await UsersModel.findById(userId).populate("blogs");
   } catch (err) {
     return next(
       new HttpError("Something went wrong, could not find a blog", 500)
     );
   }
 
-  if (!blogs) {
+  if (!userWithBlogs || userWithBlogs.blogs.length === 0) {
     return next(
       new HttpError("Could not find a blog for the provided user id", 404)
     );
   }
 
-  res.json({ blogs: blogs.map((blog) => blog.toObject({ getters: true })) });
+  res.json({
+    blogs: userWithBlogs.blogs.map((blog) => blog.toObject({ getters: true })),
+  });
 };
 
 const createBlog = async (req, res, next) => {
@@ -65,6 +68,19 @@ const createBlog = async (req, res, next) => {
     }
   }
 
+  let user;
+  try {
+    user = await UsersModel.findById(author);
+  } catch (err) {
+    return next(
+      new HttpError("Creating a blog failed, please try again.", 500)
+    );
+  }
+
+  if (!user) {
+    return next(new HttpError("Could not find user for provided id", 404));
+  }
+
   const createdBlog = new BlogsModel({
     title,
     description,
@@ -78,9 +94,16 @@ const createBlog = async (req, res, next) => {
   });
 
   try {
-    await createdBlog.save();
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await createdBlog.save({ session });
+    user.blogs.push(createdBlog);
+    await user.save({ session });
+    await session.commitTransaction();
   } catch (error) {
-    throw new HttpError("Creating a new blog failed, please try again", 500);
+    return next(
+      new HttpError("Creating a new blog failed, please try again", 500)
+    );
   }
 
   res.status(201).json({ blog: createdBlog });
@@ -122,15 +145,33 @@ const updateBlog = async (req, res, next) => {
 const deleteBlog = async (req, res, next) => {
   const blogId = req.params.id;
 
+  let blog;
   try {
-    const blog = await BlogsModel.findByIdAndDelete(blogId);
+    blog = await BlogsModel.findById(blogId).populate("author");
   } catch (err) {
     return next(
       new HttpError("Something went wrong, could not delete a blog", 500)
     );
   }
 
-  res.status(200).json({ message: "Deleted Successfully" });
+  if (!blog) {
+    return next(new HttpError("Could not find blog for this id", 404));
+  }
+
+  try {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await blog.deleteOne({ session });
+    blog.author.blogs.pull(blog);
+    await blog.author.save({ session });
+    await session.commitTransaction();
+  } catch (err) {
+    return next(
+      new HttpError("Something went wrong, could not delete a blog", 500)
+    );
+  }
+
+  res.status(200).json({ message: `Deleted Successfully` });
 };
 
 exports.getBlogById = getBlogById;
