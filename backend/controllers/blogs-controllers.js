@@ -1,5 +1,7 @@
 const HttpError = require("../models/http-error");
 const BlogsModel = require("../models/blogs");
+const { validationResult } = require("express-validator");
+const getCoordinates = require("../util/location");
 
 const getBlogById = async (req, res, next) => {
   const blogId = req.params.id;
@@ -45,8 +47,23 @@ const getBlogByUserId = async (req, res, next) => {
 };
 
 const createBlog = async (req, res, next) => {
-  const { title, description, category, author, address, coordinates } =
-    req.body;
+  const validationError = validationResult(req);
+  if (!validationError.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422)
+    );
+  }
+
+  const { title, description, category, author, address } = req.body;
+
+  let coordinates;
+  if (address) {
+    try {
+      coordinates = await getCoordinates(address);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
   const createdBlog = new BlogsModel({
     title,
@@ -57,21 +74,26 @@ const createBlog = async (req, res, next) => {
     date: new Date(),
     author,
     address: category === "travel" ? address : undefined,
-    coordinates: category === "travel" && coordinates,
+    coordinates: coordinates ? coordinates : undefined,
   });
 
   try {
     await createdBlog.save();
   } catch (error) {
-    return next(
-      new HttpError("Creating a new blog failed, please try again", 500)
-    );
+    throw new HttpError("Creating a new blog failed, please try again", 500);
   }
 
   res.status(201).json({ blog: createdBlog });
 };
 
 const updateBlog = async (req, res, next) => {
+  const validationError = validationResult(req);
+  if (!validationError.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422)
+    );
+  }
+
   const { title, description } = req.body;
   const blogId = req.params.id;
 
@@ -100,9 +122,8 @@ const updateBlog = async (req, res, next) => {
 const deleteBlog = async (req, res, next) => {
   const blogId = req.params.id;
 
-  let blog;
   try {
-    blog = await BlogsModel.findByIdAndDelete(blogId);
+    const blog = await BlogsModel.findByIdAndDelete(blogId);
   } catch (err) {
     return next(
       new HttpError("Something went wrong, could not delete a blog", 500)
