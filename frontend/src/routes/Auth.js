@@ -11,12 +11,13 @@ import "./Auth.css";
 import { AuthContext } from "../components/shared/context/auth-context";
 import LoadingSpinner from "../components/shared/uiElements/LoadingSpinner";
 import ErrorModal from "../components/shared/uiElements/ErrorModal";
+import { useFetch } from "../components/shared/hooks/request-hook";
 
 function Auth() {
   const authContext = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+
+  const { isLoading, error, request, clearError } = useFetch();
 
   const [formState, onInputHandler, setFormData] = useForm(
     {
@@ -59,61 +60,38 @@ function Auth() {
   const onSubmitLoginHandler = async (e) => {
     e.preventDefault();
 
-    setIsLoading(true);
     if (isLoginMode) {
       try {
-        const response = await fetch("http://localhost:8080/api/users/login", {
-          method: "POST",
-          headers: {
+        await request(
+          "http://localhost:8080/api/users/login",
+          "POST",
+          {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
+          JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
-          }),
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.message);
-        }
-        setIsLoading(false);
+          })
+        );
         authContext.login();
-      } catch (err) {
-        console.log(err);
-        setError(err.message);
-      }
+      } catch (err) {}
     } else {
       try {
-        const response = await fetch("http://localhost:8080/api/users/signup", {
-          method: "POST",
-          headers: {
+        await request(
+          "http://localhost:8080/api/users/signup",
+          "POST",
+          {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
+          JSON.stringify({
             name: formState.inputs.name.value,
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
-          }),
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.message);
-        }
-        setIsLoading(false);
+          })
+        );
         authContext.login();
-      } catch (err) {
-        console.log(err);
-        setError(err.message);
-      }
+      } catch (err) {}
     }
-
-    setIsLoading(false);
-  };
-
-  const errorHandler = () => {
-    setError(null);
   };
 
   return (
@@ -159,7 +137,7 @@ function Auth() {
           Switch to {isLoginMode ? "Login" : "Signup"}
         </Button>
       </div>
-      <ErrorModal error={error} onClear={errorHandler} />
+      <ErrorModal error={error} onClear={clearError} />
     </Fragment>
   );
 }

@@ -14,6 +14,7 @@ function ViewSingleBlog(props) {
 
   const openMapHandler = () => setShowMap(true);
   const closeMapHandler = () => setShowMap(false);
+  console.log(("prop", props));
 
   return (
     <Fragment>

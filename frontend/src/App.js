@@ -31,7 +31,7 @@ function App() {
         <Route path="/blogs/:category" element={<CategoryBlogs />} />
         <Route path="/blogs/:category/:id" element={<SingleBlog />} />
         <Route path="/my-blogs" element={<MyBlogs />} />
-        <Route path="/my-blogs/add-new" element={<NewBlog />} />
+        <Route path="/add-new/my-blogs" element={<NewBlog />} />
         <Route path="/auth" element={<Navigate to="/" />} />
       </Fragment>
     );

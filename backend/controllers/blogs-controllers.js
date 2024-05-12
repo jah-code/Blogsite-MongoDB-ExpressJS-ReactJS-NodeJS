@@ -5,6 +5,19 @@ const BlogsModel = require("../models/blogs");
 const UsersModel = require("../models/users");
 const mongoose = require("mongoose");
 
+const getBlogs = async (req, res, next) => {
+  let blogs;
+  try {
+    blogs = await BlogsModel.find();
+  } catch (err) {
+    return next(
+      new HttpError("Fetching blogs failed, please try again later", 500)
+    );
+  }
+
+  res.json({ data: blogs.map((blog) => blog.toObject({ getters: true })) });
+};
+
 const getBlogById = async (req, res, next) => {
   const blogId = req.params.id;
 
@@ -23,7 +36,7 @@ const getBlogById = async (req, res, next) => {
     );
   }
 
-  res.json({ blog: blog.toObject({ getters: true }) });
+  res.json({ data: blog.toObject({ getters: true }) });
 };
 
 const getBlogByUserId = async (req, res, next) => {
@@ -174,6 +187,7 @@ const deleteBlog = async (req, res, next) => {
   res.status(200).json({ message: `Deleted Successfully` });
 };
 
+exports.getBlogs = getBlogs;
 exports.getBlogById = getBlogById;
 exports.getBlogByUserId = getBlogByUserId;
 exports.createBlog = createBlog;

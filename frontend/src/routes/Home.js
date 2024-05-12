@@ -1,8 +1,8 @@
 import React from "react";
-import Category from "./Category";
+import CategoryList from "../components/category/CategoryList";
 
 function Home() {
-  return <Category />;
+  return <CategoryList />;
 }
 
 export default Home;
