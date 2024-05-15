@@ -39,7 +39,7 @@ const getBlogById = async (req, res, next) => {
   res.json({ data: blog.toObject({ getters: true }) });
 };
 
-const getBlogByUserId = async (req, res, next) => {
+const getBlogsByUserId = async (req, res, next) => {
   const userId = req.params.id;
 
   let userWithBlogs;
@@ -58,12 +58,14 @@ const getBlogByUserId = async (req, res, next) => {
   }
 
   res.json({
-    blogs: userWithBlogs.blogs.map((blog) => blog.toObject({ getters: true })),
+    data: userWithBlogs.blogs.map((blog) => blog.toObject({ getters: true })),
   });
 };
 
 const createBlog = async (req, res, next) => {
+  console.log("requestValid", req.body);
   const validationError = validationResult(req);
+  console.log("validationError", validationError);
   if (!validationError.isEmpty()) {
     return next(
       new HttpError("Invalid inputs passed, please check your data.", 422)
@@ -81,6 +83,18 @@ const createBlog = async (req, res, next) => {
     }
   }
 
+  const createdBlog = new BlogsModel({
+    title,
+    description,
+    image:
+      "https://as1.ftcdn.net/v2/jpg/02/45/68/40/1000_F_245684006_e55tOria5okQtKmiLLbY30NgEHTIB0Og.jpg",
+    category,
+    date: new Date(),
+    author,
+    address: address ? address : undefined,
+    coordinates: coordinates ? coordinates : undefined,
+  });
+
   let user;
   try {
     user = await UsersModel.findById(author);
@@ -94,17 +108,7 @@ const createBlog = async (req, res, next) => {
     return next(new HttpError("Could not find user for provided id", 404));
   }
 
-  const createdBlog = new BlogsModel({
-    title,
-    description,
-    image:
-      "https://as1.ftcdn.net/v2/jpg/02/45/68/40/1000_F_245684006_e55tOria5okQtKmiLLbY30NgEHTIB0Og.jpg",
-    category,
-    date: new Date(),
-    author,
-    address: category === "travel" ? address : undefined,
-    coordinates: coordinates ? coordinates : undefined,
-  });
+  console.log("user", user);
 
   try {
     const session = await mongoose.startSession();
@@ -189,7 +193,7 @@ const deleteBlog = async (req, res, next) => {
 
 exports.getBlogs = getBlogs;
 exports.getBlogById = getBlogById;
-exports.getBlogByUserId = getBlogByUserId;
+exports.getBlogsByUserId = getBlogsByUserId;
 exports.createBlog = createBlog;
 exports.updateBlog = updateBlog;
 exports.deleteBlog = deleteBlog;

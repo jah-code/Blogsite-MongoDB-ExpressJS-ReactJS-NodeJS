@@ -13,13 +13,11 @@ function Blogs() {
       try {
         const result = await request("http://localhost:8080/api/blogs");
         setBlogs(result.data);
-
-        console.log("result", result);
       } catch (err) {}
     };
 
     fetchBlogs();
-  }, []);
+  }, [request]);
 
   return (
     <Fragment>

@@ -62,7 +62,7 @@ function Auth() {
 
     if (isLoginMode) {
       try {
-        await request(
+        const result = await request(
           "http://localhost:8080/api/users/login",
           "POST",
           {
@@ -73,11 +73,11 @@ function Auth() {
             password: formState.inputs.password.value,
           })
         );
-        authContext.login();
+        authContext.login(result.userId, result.token);
       } catch (err) {}
     } else {
       try {
-        await request(
+        const result = await request(
           "http://localhost:8080/api/users/signup",
           "POST",
           {
@@ -89,7 +89,7 @@ function Auth() {
             password: formState.inputs.password.value,
           })
         );
-        authContext.login();
+        authContext.login(result.userId, result.token);
       } catch (err) {}
     }
   };

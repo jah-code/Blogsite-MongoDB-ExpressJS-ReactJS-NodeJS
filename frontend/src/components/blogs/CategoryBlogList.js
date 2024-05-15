@@ -19,7 +19,7 @@ function CategoryBlogList({ items }) {
         <BlogItem
           key={blog.id}
           id={blog.id}
-          image={blog.imageUrl}
+          image={blog.image}
           category={blog.category}
           author={blog.author}
           title={blog.title}

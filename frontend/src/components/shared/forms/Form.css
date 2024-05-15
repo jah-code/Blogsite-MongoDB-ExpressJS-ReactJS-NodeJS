@@ -14,6 +14,7 @@
   }
   
   .form-control input,
+  .form-control select,
   .form-control textarea {
     width: 100%;
     font: inherit;
@@ -26,7 +27,7 @@
   .form-control textarea:focus {
     outline: none;
     background: #ebebeb;
-    border-color: #510077;
+    border-color: #8fac8f;
   }
   
   .form-control--invalid label,
@@ -38,4 +39,8 @@
   .form-control--invalid textarea {
     border-color: red;
     background: #ffd1d1;
+  }
+
+  .form-control select option:hover {
+    background-color: #8fac8f !important;
   }

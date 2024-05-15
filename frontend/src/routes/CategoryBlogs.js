@@ -19,7 +19,7 @@ function CategoryBlogs() {
     };
 
     fetchBlogs();
-  }, [request]);
+  }, []);
 
   const blogsByCategory = blogs.filter((blog) => blog.category === category);
 

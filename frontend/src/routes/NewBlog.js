@@ -1,15 +1,24 @@
-import React from "react";
+import { Fragment, useContext, useEffect } from "react";
 import Input from "../components/shared/forms/Input";
 import Button from "../components/shared/uiElements/Button";
-import "./NewBlog.css";
+import Select from "../components/shared/forms/Select";
+import { useForm } from "../components/shared/hooks/form-hook";
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../components/shared/util/validators";
-import { useForm } from "../components/shared/hooks/form-hook";
+import "./NewBlog.css";
+import { AuthContext } from "../components/shared/context/auth-context";
+import { useFetch } from "../components/shared/hooks/request-hook";
+import LoadingSpinner from "../components/shared/uiElements/LoadingSpinner";
+import ErrorModal from "../components/shared/uiElements/ErrorModal";
+import { useNavigate } from "react-router-dom";
 
 function NewBlog() {
-  const [formState, onInputHandler] = useForm(
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+  const options = ["Food", "Sports", "Travel"];
+  const [formState, onInputHandler, setFormData] = useForm(
     {
       title: {
         value: "",
@@ -17,43 +26,124 @@ function NewBlog() {
       },
       description: {
         value: "",
-        isValid: false,
+        isValid: true,
+      },
+      category: {
+        value: options[0],
+        isValid: true,
       },
     },
     false
   );
 
-  const onSubmitAddHandler = (e) => {
+  const { isLoading, error, request, clearError } = useFetch();
+
+  const onSubmitAddHandler = async (e) => {
     e.preventDefault();
-    console.log("add blog", formState.inputs);
+    try {
+      await request(
+        "http://localhost:8080/api/blogs/add-new",
+        "POST",
+        {
+          "Content-Type": "application/json",
+        },
+        // {
+        //   Authorization: "Bearer " + auth.token,
+        // },
+        JSON.stringify({
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+          category: formState.inputs.category.value,
+          address: formState.inputs.address
+            ? formState.inputs.address.value
+            : undefined,
+          author: auth.userId,
+        })
+      );
+      navigate("/my-blogs");
+    } catch (err) {}
   };
 
+  useEffect(() => {
+    const onSwitchCategory = () => {
+      if (formState.inputs.category === "travel") {
+        setFormData(
+          {
+            ...formState.inputs,
+            address: {
+              value: "",
+            },
+          },
+          false
+        );
+      } else {
+        setFormData(
+          {
+            ...formState.inputs,
+            address: undefined,
+          },
+          formState.inputs.title.isValid &&
+            formState.inputs.description.isValid &&
+            formState.inputs.category.isValid
+        );
+      }
+    };
+
+    onSwitchCategory();
+  }, [formState.inputs.category, setFormData]);
+
   return (
-    <form className="blog-form" onSubmit={onSubmitAddHandler}>
-      <Input
-        id="title"
-        element="input"
-        type="text"
-        label="Title"
-        validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
-        onInputHandler={onInputHandler}
-      />
-      <Input
-        id="description"
-        element="textarea"
-        type="text"
-        label="Description"
-        validators={[VALIDATOR_MINLENGTH(10)]}
-        errorText="Please enter a valid description (at least 10 characters)."
-        onInputHandler={onInputHandler}
-      />
-      <div className="text-right">
-        <Button type="submit" disabled={!formState.isValid}>
-          Add Blog
-        </Button>
-      </div>
-    </form>
+    <Fragment>
+      <form className="blog-form" onSubmit={onSubmitAddHandler}>
+        {isLoading && (
+          <div className="text-center">
+            <LoadingSpinner />
+          </div>
+        )}
+        <Input
+          id="title"
+          element="input"
+          type="text"
+          label="Title"
+          validators={[VALIDATOR_REQUIRE()]}
+          errorText="Please enter a valid title."
+          onInputHandler={onInputHandler}
+        />
+        <Input
+          id="description"
+          element="textarea"
+          type="text"
+          label="Description"
+          validators={[VALIDATOR_MINLENGTH(10)]}
+          errorText="Please enter a valid description (at least 10 characters)."
+          onInputHandler={onInputHandler}
+        />
+        <Select
+          id="category"
+          label="Category"
+          validators={[VALIDATOR_REQUIRE()]}
+          errorText="Please select a category."
+          onInputHandler={onInputHandler}
+          options={options}
+        />
+        {formState.inputs.category.value === "Travel" && (
+          <Input
+            id="address"
+            element="textarea"
+            type="text"
+            label="Address"
+            errorText="Please enter a valid description (at least 5 characters)."
+            onInputHandler={onInputHandler}
+          />
+        )}
+        <div className="text-right">
+          <Button type="submit" disabled={!formState.isValid}>
+            Add Blog
+          </Button>
+        </div>
+      </form>
+      <ErrorModal error={error} onClear={clearError} />
+    </Fragment>
   );
 }
 

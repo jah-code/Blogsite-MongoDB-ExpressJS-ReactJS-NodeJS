@@ -8,9 +8,7 @@ const inputReducer = (state, action) => {
       return {
         ...state,
         value: action.val,
-        isValid: action.validators
-          ? validate(action.val, action.validators)
-          : true,
+        isValid: validate(action.val, action.validators),
       };
     case "TOUCH":
       return {
@@ -22,11 +20,11 @@ const inputReducer = (state, action) => {
   }
 };
 
-function Input(props) {
+function Select(props) {
   const initialState = {
-    value: props.value || "",
-    isValid: props.validators ? props.valid || false : true,
-    isTouched: false,
+    value: props.initialValue || "",
+    isValid: false,
+    isTouched: props.initialValid || false,
   };
   const [inputState, dispatch] = useReducer(inputReducer, initialState);
 
@@ -41,7 +39,7 @@ function Input(props) {
     dispatch({
       type: "CHANGE",
       val: e.target.value,
-      validators: props.validators ? props.validators : null,
+      validators: props.validators,
     });
   };
 
@@ -51,25 +49,19 @@ function Input(props) {
     });
   };
 
-  const element =
-    props.element === "input" ? (
-      <input
-        id={props.id}
-        type={props.type}
-        placeholder={props.placeholder}
-        onChange={onChangeHandler}
-        value={inputState.value}
-        onBlur={onTouchHandler}
-      />
-    ) : (
-      <textarea
-        id={props.id}
-        rows={props.rows || 3}
-        onChange={onChangeHandler}
-        value={inputState.value}
-        onBlur={onTouchHandler}
-      />
-    );
+  const element = (
+    <select
+      onChange={onChangeHandler}
+      onBlur={onTouchHandler}
+      value={inputState.value}
+    >
+      {props.options.map((opt) => (
+        <option value={opt} key={opt}>
+          {opt}
+        </option>
+      ))}
+    </select>
+  );
 
   return (
     <div
@@ -84,4 +76,4 @@ function Input(props) {
   );
 }
 
-export default Input;
+export default Select;

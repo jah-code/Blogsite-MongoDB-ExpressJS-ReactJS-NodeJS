@@ -30,7 +30,7 @@ function NavLinks() {
         )}
         {isLoggedIn && (
           <li>
-            <NavLink to="/my-blogs/add-new">Add Blog</NavLink>
+            <NavLink to="/add-new/my-blogs">Add Blog</NavLink>
           </li>
         )}
         <li>

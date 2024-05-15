@@ -3,10 +3,14 @@ const { check } = require("express-validator");
 const router = express.Router();
 
 const blogsControllers = require("../controllers/blogs-controllers");
+// const checkAuth = require("../middleware/check-auth");
 
 router.get("/", blogsControllers.getBlogs);
 router.get("/:id", blogsControllers.getBlogById);
-router.get("/user/:id", blogsControllers.getBlogByUserId);
+router.get("/user/:id", blogsControllers.getBlogsByUserId);
+
+// router.use(checkAuth);
+
 router.post(
   "/add-new",
   [

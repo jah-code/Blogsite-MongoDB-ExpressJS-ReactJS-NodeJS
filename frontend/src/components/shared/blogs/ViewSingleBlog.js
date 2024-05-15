@@ -35,7 +35,7 @@ function ViewSingleBlog(props) {
             <div className="text-sm mt-3">{description}</div>
           </div>
           <div className="mt-5">
-            {category === "travel" && (
+            {others.coordinates && (
               <Button onClick={openMapHandler}>View Map</Button>
             )}
             {isLoggedIn && (

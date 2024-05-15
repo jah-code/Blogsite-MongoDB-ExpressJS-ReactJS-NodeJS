@@ -29,7 +29,7 @@ function BlogItem(props) {
           <Button to={`/blogs/${category}/${id}`}>View Blog</Button>
           {isLoggedIn && (
             <Fragment>
-              <Button>Edit</Button>
+              <Button to={`/update/my-blog/${id}`}>Edit</Button>
               <Button>Delete</Button>
             </Fragment>
           )}
