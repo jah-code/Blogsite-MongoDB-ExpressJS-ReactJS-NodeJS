@@ -10,19 +10,24 @@ function MyBlogs() {
   const [myBlogs, setMyBlogs] = useState([]);
 
   const auth = useContext(AuthContext);
+  const { userId } = auth;
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const result = await request(
-          `http://localhost:8080/api/blogs/user/${auth.userId}`
+          `http://localhost:8080/api/blogs/user/${userId}`
         );
         setMyBlogs(result.data);
       } catch (err) {}
     };
 
     fetchBlogs();
-  }, [request]);
+  }, [request, userId]);
+
+  const onDeleteBlogHandler = (blogId) => {
+    setMyBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
+  };
 
   return (
     <Fragment>
@@ -31,7 +36,9 @@ function MyBlogs() {
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && myBlogs && <MyBlogList items={myBlogs} />}
+      {!isLoading && myBlogs && (
+        <MyBlogList items={myBlogs} onDeleteBlogHandler={onDeleteBlogHandler} />
+      )}
       {<ErrorModal error={error} onClear={clearError} />}
     </Fragment>
   );

@@ -19,8 +19,6 @@ function SingleBlog() {
     fetchBlog();
   }, []);
 
-  console.log("data", blog);
-
   return (
     <Fragment>
       {isLoading && (

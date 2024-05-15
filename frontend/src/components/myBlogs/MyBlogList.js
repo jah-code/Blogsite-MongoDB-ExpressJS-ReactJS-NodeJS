@@ -1,14 +1,15 @@
 import { Card } from "antd";
 import React from "react";
 import BlogItem from "../shared/blogs/BlogItem";
+import Button from "../shared/uiElements/Button";
 
-function MyBlogList({ items }) {
+function MyBlogList({ items, onDeleteBlogHandler }) {
   if (!items.length) {
     return (
       <div className="place-list snap-center">
         <Card>
           <h2>You haven't shared any blogs yet.</h2>
-          <button>Create One</button>
+          <Button to="/add-new/my-blogs">Create One</Button>
         </Card>
       </div>
     );
@@ -25,6 +26,7 @@ function MyBlogList({ items }) {
           author={blog.author}
           title={blog.title}
           description={blog.description}
+          onDelete={onDeleteBlogHandler}
         />
       ))}
     </ul>
