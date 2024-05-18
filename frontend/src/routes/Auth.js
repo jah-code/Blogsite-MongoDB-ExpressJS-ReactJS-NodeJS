@@ -65,13 +65,13 @@ function Auth() {
         const result = await request(
           "http://localhost:8080/api/users/login",
           "POST",
-          {
-            "Content-Type": "application/json",
-          },
           JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
-          })
+          }),
+          {
+            "Content-Type": "application/json",
+          }
         );
         authContext.login(result.userId, result.token);
       } catch (err) {}
@@ -80,14 +80,14 @@ function Auth() {
         const result = await request(
           "http://localhost:8080/api/users/signup",
           "POST",
-          {
-            "Content-Type": "application/json",
-          },
           JSON.stringify({
             name: formState.inputs.name.value,
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
-          })
+          }),
+          {
+            "Content-Type": "application/json",
+          }
         );
         authContext.login(result.userId, result.token);
       } catch (err) {}

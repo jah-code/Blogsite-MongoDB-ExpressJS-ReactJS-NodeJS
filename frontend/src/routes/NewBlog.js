@@ -13,6 +13,7 @@ import { useFetch } from "../components/shared/hooks/request-hook";
 import LoadingSpinner from "../components/shared/uiElements/LoadingSpinner";
 import ErrorModal from "../components/shared/uiElements/ErrorModal";
 import { useNavigate } from "react-router-dom";
+import ImageUpload from "../components/shared/forms/ImageUpload";
 
 function NewBlog() {
   const auth = useContext(AuthContext);
@@ -26,11 +27,15 @@ function NewBlog() {
       },
       description: {
         value: "",
-        isValid: true,
+        isValid: false,
       },
       category: {
         value: options[0],
         isValid: true,
+      },
+      image: {
+        value: "",
+        isValid: false,
       },
     },
     false
@@ -41,27 +46,29 @@ function NewBlog() {
   const onSubmitAddHandler = async (e) => {
     e.preventDefault();
     try {
-      await request(
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append("category", formState.inputs.category.value);
+      formData.append(
+        "address",
+        formState.inputs.address ? formState.inputs.address.value : undefined
+      );
+      formData.append("author", auth.userId);
+      formData.append("image", formState.inputs.image.value);
+      const result = await request(
         "http://localhost:8080/api/blogs/add-new",
         "POST",
-        {
-          "Content-Type": "application/json",
-        },
+        formData
         // {
         //   Authorization: "Bearer " + auth.token,
         // },
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          category: formState.inputs.category.value,
-          address: formState.inputs.address
-            ? formState.inputs.address.value
-            : undefined,
-          author: auth.userId,
-        })
       );
+      console.log("add new result", result);
       navigate("/my-blogs");
-    } catch (err) {}
+    } catch (err) {
+      console.log("error", err.message);
+    }
   };
 
   useEffect(() => {
@@ -129,13 +136,14 @@ function NewBlog() {
         {formState.inputs.category.value === "Travel" && (
           <Input
             id="address"
-            element="textarea"
+            element="input"
             type="text"
             label="Address"
             errorText="Please enter a valid description (at least 5 characters)."
             onInputHandler={onInputHandler}
           />
         )}
+        <ImageUpload center id={"image"} onInput={onInputHandler} />
         <div className="text-right">
           <Button type="submit" disabled={!formState.isValid}>
             Add Blog

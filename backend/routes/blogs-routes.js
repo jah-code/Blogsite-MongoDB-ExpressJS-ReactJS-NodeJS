@@ -3,6 +3,7 @@ const { check } = require("express-validator");
 const router = express.Router();
 
 const blogsControllers = require("../controllers/blogs-controllers");
+const fileUpload = require("../middleware/file-upload");
 // const checkAuth = require("../middleware/check-auth");
 
 router.get("/", blogsControllers.getBlogs);
@@ -13,6 +14,7 @@ router.get("/user/:id", blogsControllers.getBlogsByUserId);
 
 router.post(
   "/add-new",
+  fileUpload.single("image"),
   [
     check("title").not().isEmpty(),
     check("description").isLength({ min: 10 }),

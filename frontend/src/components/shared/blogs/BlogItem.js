@@ -36,7 +36,7 @@ function BlogItem(props) {
           {isLoading && <LoadingSpinner asOverLay />}
           <div className="mx-20 img">
             <img
-              src={image}
+              src={`http://localhost:8080/${image}`}
               alt={title}
               className="object-cover h-80 size-full"
             />

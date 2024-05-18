@@ -4,6 +4,7 @@ const getCoordinates = require("../util/location");
 const BlogsModel = require("../models/blogs");
 const UsersModel = require("../models/users");
 const mongoose = require("mongoose");
+const fs = require("fs");
 
 const getBlogs = async (req, res, next) => {
   let blogs;
@@ -63,16 +64,14 @@ const getBlogsByUserId = async (req, res, next) => {
 };
 
 const createBlog = async (req, res, next) => {
-  console.log("requestValid", req.body);
   const validationError = validationResult(req);
-  console.log("validationError", validationError);
   if (!validationError.isEmpty()) {
     return next(
       new HttpError("Invalid inputs passed, please check your data.", 422)
     );
   }
 
-  const { title, description, category, author, address } = req.body;
+  const { title, description, category, address, author } = req.body;
 
   let coordinates;
   if (address) {
@@ -86,8 +85,7 @@ const createBlog = async (req, res, next) => {
   const createdBlog = new BlogsModel({
     title,
     description,
-    image:
-      "https://as1.ftcdn.net/v2/jpg/02/45/68/40/1000_F_245684006_e55tOria5okQtKmiLLbY30NgEHTIB0Og.jpg",
+    image: req.file.path,
     category,
     date: new Date(),
     author,
@@ -107,8 +105,6 @@ const createBlog = async (req, res, next) => {
   if (!user) {
     return next(new HttpError("Could not find user for provided id", 404));
   }
-
-  console.log("user", user);
 
   try {
     const session = await mongoose.startSession();
@@ -175,6 +171,8 @@ const deleteBlog = async (req, res, next) => {
     return next(new HttpError("Could not find blog for this id", 404));
   }
 
+  const imgPath = blog.image;
+
   try {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -187,6 +185,10 @@ const deleteBlog = async (req, res, next) => {
       new HttpError("Something went wrong, could not delete a blog", 500)
     );
   }
+
+  fs.unlink(imgPath, (err) => {
+    console.log(err);
+  });
 
   res.status(200).json({ message: `Deleted Successfully` });
 };

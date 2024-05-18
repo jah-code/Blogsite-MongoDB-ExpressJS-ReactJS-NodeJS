@@ -15,6 +15,7 @@ function Button(props) {
       className={`${props.className} button`}
       onClick={props.onClick}
       disabled={props.disabled}
+      type={props.type}
     >
       {props.children}
     </button>
