@@ -22,8 +22,8 @@ function BlogItem(props) {
   const confirmDeleteHandler = async () => {
     setShowDelConfirmation(false);
     try {
-      await request(`http://localhost:8080/api/blogs/${id}`, "DELETE", {
-        "Content-Type": "application/json",
+      await request(`http://localhost:8080/api/blogs/${id}`, "DELETE", null, {
+        Authorization: "Bearer " + auth.token,
       });
       onDelete(id);
     } catch (err) {}

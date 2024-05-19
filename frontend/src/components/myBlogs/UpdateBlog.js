@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Input from "../shared/forms/Input";
 import Button from "../shared/uiElements/Button";
@@ -12,10 +12,12 @@ import { useFetch } from "../shared/hooks/request-hook";
 import LoadingSpinner from "../shared/uiElements/LoadingSpinner";
 import Card from "../shared/uiElements/Card";
 import ErrorModal from "../shared/uiElements/ErrorModal";
+import { AuthContext } from "../shared/context/auth-context";
 
 function UpdateBlog() {
   const navigate = useNavigate();
   const blogId = useParams().id;
+  const auth = useContext(AuthContext);
   const [selectedBlog, setSelectedBlog] = useState();
 
   const { isLoading, error, request, clearError } = useFetch();
@@ -39,13 +41,14 @@ function UpdateBlog() {
       await request(
         `http://localhost:8080/api/blogs/${blogId}`,
         "PATCH",
-        {
-          "Content-Type": "application/json",
-        },
         JSON.stringify({
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
-        })
+        }),
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
       );
       navigate(`/blogs/${selectedBlog.category}/${blogId}`);
     } catch (err) {}

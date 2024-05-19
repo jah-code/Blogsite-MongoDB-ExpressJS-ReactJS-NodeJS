@@ -1,30 +1,20 @@
-import { Fragment, useCallback, useState } from "react";
+import { Fragment } from "react";
 import { Route, BrowserRouter, Routes, Navigate } from "react-router-dom";
 import Home from "./routes/Home";
 import NewBlog from "./routes/NewBlog";
-import MainNavigation from "./components/shared/navigation/MainNavigation";
 import MyBlogs from "./routes/MyBlogs";
 import Blogs from "./routes/Blogs";
 import CategoryBlogs from "./routes/CategoryBlogs";
 import SingleBlog from "./routes/SingleBlog";
 import Auth from "./routes/Auth";
-import { AuthContext } from "./components/shared/context/auth-context";
-import "./App.css";
 import UpdateBlog from "./components/myBlogs/UpdateBlog";
+import MainNavigation from "./components/shared/navigation/MainNavigation";
+import { AuthContext } from "./components/shared/context/auth-context";
+import { useAuth } from "./components/shared/hooks/auth-hook";
+import "./App.css";
 
 function App() {
-  const [token, setToken] = useState();
-  const [userId, setUserId] = useState(null);
-
-  const login = useCallback((uid, token) => {
-    setToken(token);
-    setUserId(uid);
-  }, []);
-
-  const logout = useCallback(() => {
-    setToken(null);
-    setUserId(null);
-  }, []);
+  const { userId, token, login, logout } = useAuth();
 
   let routes;
   if (token) {
@@ -58,9 +48,9 @@ function App() {
       value={{
         isLoggedIn: !!token,
         token: token,
+        userId: userId,
         login: login,
         logout: logout,
-        userId: userId,
       }}
     >
       <div className="m-8">

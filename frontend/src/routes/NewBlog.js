@@ -54,15 +54,14 @@ function NewBlog() {
         "address",
         formState.inputs.address ? formState.inputs.address.value : undefined
       );
-      formData.append("author", auth.userId);
       formData.append("image", formState.inputs.image.value);
       const result = await request(
         "http://localhost:8080/api/blogs/add-new",
         "POST",
-        formData
-        // {
-        //   Authorization: "Bearer " + auth.token,
-        // },
+        formData,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
       );
       console.log("add new result", result);
       navigate("/my-blogs");

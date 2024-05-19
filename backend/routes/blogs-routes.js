@@ -4,13 +4,13 @@ const router = express.Router();
 
 const blogsControllers = require("../controllers/blogs-controllers");
 const fileUpload = require("../middleware/file-upload");
-// const checkAuth = require("../middleware/check-auth");
+const checkAuth = require("../middleware/check-auth");
 
 router.get("/", blogsControllers.getBlogs);
 router.get("/:id", blogsControllers.getBlogById);
 router.get("/user/:id", blogsControllers.getBlogsByUserId);
 
-// router.use(checkAuth);
+router.use(checkAuth);
 
 router.post(
   "/add-new",

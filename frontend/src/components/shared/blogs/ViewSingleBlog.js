@@ -28,8 +28,8 @@ function ViewSingleBlog(props) {
 
   const confirmDeleteHandler = async () => {
     try {
-      await request(`http://localhost:8080/api/blogs/${id}`, "DELETE", {
-        "Content-Type": "application/json",
+      await request(`http://localhost:8080/api/blogs/${id}`, "DELETE", null, {
+        Authorization: "Bearer " + auth.token,
       });
       navigate("/my-blogs");
     } catch (err) {}
@@ -46,7 +46,7 @@ function ViewSingleBlog(props) {
           )}
           <div className="mx-10 img">
             <img
-              src={image}
+              src={`http://localhost:8080/${image}`}
               alt={title}
               className="object-cover max-h-[450px] size-full"
             />

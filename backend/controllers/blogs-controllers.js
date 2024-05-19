@@ -52,7 +52,7 @@ const getBlogsByUserId = async (req, res, next) => {
     );
   }
 
-  if (!userWithBlogs || userWithBlogs.blogs.length === 0) {
+  if (!userWithBlogs) {
     return next(
       new HttpError("Could not find a blog for the provided user id", 404)
     );
@@ -71,10 +71,10 @@ const createBlog = async (req, res, next) => {
     );
   }
 
-  const { title, description, category, address, author } = req.body;
+  const { title, description, category, address } = req.body;
 
   let coordinates;
-  if (address) {
+  if (category.toLowerCase() === "travel") {
     try {
       coordinates = await getCoordinates(address);
     } catch (err) {
@@ -88,14 +88,14 @@ const createBlog = async (req, res, next) => {
     image: req.file.path,
     category,
     date: new Date(),
-    author,
+    author: req.userData.userId,
     address: address ? address : undefined,
     coordinates: coordinates ? coordinates : undefined,
   });
 
   let user;
   try {
-    user = await UsersModel.findById(author);
+    user = await UsersModel.findById(req.userData.userId);
   } catch (err) {
     return next(
       new HttpError("Creating a blog failed, please try again.", 500)
@@ -141,6 +141,11 @@ const updateBlog = async (req, res, next) => {
       new HttpError("Something went wrong, could not update a blog", 500)
     );
   }
+
+  if (blog.author.toString() !== req.userData.userId) {
+    return next(new HttpError("You are not allowed to edit this blog.", 401));
+  }
+
   blog.title = title;
   blog.description = description;
 
@@ -152,7 +157,10 @@ const updateBlog = async (req, res, next) => {
     );
   }
 
-  res.status(200).json({ blog: blog.toObject({ getters: true }) });
+  res.status(200).json({
+    blog: blog.toObject({ getters: true }),
+    userId: req.userData.userId,
+  });
 };
 
 const deleteBlog = async (req, res, next) => {
@@ -169,6 +177,10 @@ const deleteBlog = async (req, res, next) => {
 
   if (!blog) {
     return next(new HttpError("Could not find blog for this id", 404));
+  }
+
+  if (blog.author.id !== req.userData.userId) {
+    return next(new HttpError("You are not allowed to delete this blog.", 401));
   }
 
   const imgPath = blog.image;

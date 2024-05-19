@@ -65,7 +65,7 @@ const signup = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: createdUser.id, email: createdUser.email },
-      "supersecret_blogpostapp",
+      "PK_blogpostapp_lae",
       { expiresIn: "2h" }
     );
   } catch (err) {
@@ -73,7 +73,7 @@ const signup = async (req, res, next) => {
   }
 
   res
-    .status(200)
+    .status(201)
     .json({ userId: createdUser.id, email: createdUser.email, token: token });
 };
 
@@ -95,7 +95,7 @@ const login = async (req, res, next) => {
     );
   }
 
-  let isValidPassword;
+  let isValidPassword = false;
   try {
     isValidPassword = await bcrypt.compare(password, registeredUser.password);
   } catch {
@@ -117,7 +117,7 @@ const login = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: registeredUser.id, email: registeredUser.email },
-      "supersecret_blogpostapp",
+      "PK_blogpostapp_lae",
       { expiresIn: "2h" }
     );
   } catch (err) {
