@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useLayoutEffect } from "react";
 
 let logoutTimer;
 
@@ -40,7 +40,7 @@ export const useAuth = () => {
     }
   }, [token, logout, tokenExpiryDate]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const localStorageData = JSON.parse(localStorage.getItem("userData"));
     if (
       localStorageData &&

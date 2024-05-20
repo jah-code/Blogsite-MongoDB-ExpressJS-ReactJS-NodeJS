@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useContext } from "react";
+import { Fragment, useState, useContext, useLayoutEffect } from "react";
 import MyBlogList from "../components/myBlogs/MyBlogList";
 import { useFetch } from "../components/shared/hooks/request-hook";
 import LoadingSpinner from "../components/shared/uiElements/LoadingSpinner";
@@ -12,7 +12,7 @@ function MyBlogs() {
   const auth = useContext(AuthContext);
   const { userId } = auth;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchBlogs = async () => {
       try {
         const result = await request(

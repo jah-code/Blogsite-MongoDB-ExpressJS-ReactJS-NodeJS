@@ -12,8 +12,10 @@ import { AuthContext } from "../components/shared/context/auth-context";
 import LoadingSpinner from "../components/shared/uiElements/LoadingSpinner";
 import ErrorModal from "../components/shared/uiElements/ErrorModal";
 import { useFetch } from "../components/shared/hooks/request-hook";
+import { useNavigate } from "react-router-dom";
 
 function Auth() {
+  const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
 
@@ -74,6 +76,7 @@ function Auth() {
           }
         );
         authContext.login(result.userId, result.token);
+        navigate("/");
       } catch (err) {}
     } else {
       try {
@@ -90,6 +93,7 @@ function Auth() {
           }
         );
         authContext.login(result.userId, result.token);
+        navigate("/");
       } catch (err) {}
     }
   };

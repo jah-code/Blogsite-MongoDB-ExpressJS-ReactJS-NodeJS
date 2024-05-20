@@ -55,7 +55,7 @@ function NewBlog() {
         formState.inputs.address ? formState.inputs.address.value : undefined
       );
       formData.append("image", formState.inputs.image.value);
-      const result = await request(
+      await request(
         "http://localhost:8080/api/blogs/add-new",
         "POST",
         formData,
@@ -63,16 +63,16 @@ function NewBlog() {
           Authorization: "Bearer " + auth.token,
         }
       );
-      console.log("add new result", result);
       navigate("/my-blogs");
     } catch (err) {
       console.log("error", err.message);
     }
   };
 
+  const { category } = formState.inputs;
   useEffect(() => {
     const onSwitchCategory = () => {
-      if (formState.inputs.category === "travel") {
+      if (category.value === "Travel") {
         setFormData(
           {
             ...formState.inputs,
@@ -90,13 +90,13 @@ function NewBlog() {
           },
           formState.inputs.title.isValid &&
             formState.inputs.description.isValid &&
-            formState.inputs.category.isValid
+            category.isValid
         );
       }
     };
 
     onSwitchCategory();
-  }, [formState.inputs.category, setFormData]);
+  }, [category, setFormData]);
 
   return (
     <Fragment>
@@ -120,6 +120,7 @@ function NewBlog() {
           element="textarea"
           type="text"
           label="Description"
+          row={20}
           validators={[VALIDATOR_MINLENGTH(10)]}
           errorText="Please enter a valid description (at least 10 characters)."
           onInputHandler={onInputHandler}
