@@ -4,12 +4,12 @@ import Card from "../shared/uiElements/Card";
 function Education() {
   return (
     <Card className="mb-8">
-      <div className="grid grid-cols-2">
+      <div className="grid lg:grid-cols-2 md:grid-cols-1">
         <div className="text-center">
           <img
-            src={require("../../images/education.png")}
+            src="/assets/images/education.png"
             alt="My Educations"
-            className="h-64 m-auto"
+            className="h-64 m-auto hover:scale-110 transition"
           />
         </div>
         <div className="text-center">

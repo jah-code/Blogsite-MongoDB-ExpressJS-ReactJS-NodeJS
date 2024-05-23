@@ -44,7 +44,7 @@ function ViewSingleBlog(props) {
               <LoadingSpinner />
             </div>
           )}
-          <div className="mx-10 img">
+          <div className="lg:mx-10 sm:mx-0 img">
             <img
               src={`http://localhost:8080/${image}`}
               alt={title}

@@ -9,7 +9,7 @@
     border-radius: 20px;
 }
 
-.button:hover,
+/* .button:hover,
 .button:active
 .button:hover:enabled,
 .button:active:enabled {
@@ -17,7 +17,7 @@
     border: 1px solid #8fac8f;
     color: #8fac8f;
     cursor: pointer;
-}
+} */
 
 .button:disabled {
     cursor: not-allowed;

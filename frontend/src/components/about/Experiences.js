@@ -4,7 +4,7 @@ import Card from "../shared/uiElements/Card";
 function Experiences() {
   return (
     <Card className="mb-8">
-      <div className="grid grid-cols-2">
+      <div className="grid lg:grid-cols-2 md:grid-cols-1">
         <div className="exp-col">
           <h1 className="mb-4">Experiences</h1>
           <div className="p-row">
@@ -38,9 +38,9 @@ function Experiences() {
         </div>
         <div className="text-center">
           <img
-            src={require("../../images/experience.png")}
+            src="/assets/images/experience.png"
             alt="Lijah Garcia"
-            className="h-80 m-auto"
+            className="h-80 m-auto hover:scale-110 transition"
           />
         </div>
       </div>

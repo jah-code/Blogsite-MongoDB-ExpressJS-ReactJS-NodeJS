@@ -6,7 +6,7 @@ import { images } from "../../images/images";
 
 function CategoryItem({ name }) {
   return (
-    <li>
+    <li className="transition hover:-translate-y-1">
       <Card>
         <Link to={`/blogs/${name.toLowerCase()}`}>
           <div className="">

@@ -34,7 +34,7 @@ function BlogItem(props) {
       <li className="mb-6">
         <Card className="text-center">
           {isLoading && <LoadingSpinner asOverLay />}
-          <div className="mx-20 img">
+          <div className="lg:mx-20 sm:mx-0 img">
             <img
               src={`http://localhost:8080/${image}`}
               alt={title}
@@ -46,7 +46,7 @@ function BlogItem(props) {
             <i className="text-xs">
               Author: {author} * {category.toUpperCase()}
             </i>
-            <div className="text-sm mt-3">{description}</div>
+            <div className="text-sm mt-3 line-2-el">{description}</div>
           </div>
           <div className="mt-5">
             <Button to={`/blogs/${category}/${id}`}>View Blog</Button>

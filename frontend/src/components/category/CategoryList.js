@@ -12,7 +12,7 @@ function CategoryList() {
   ];
 
   return (
-    <ul className="grid grid-cols-4 gap-6">
+    <ul className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
       {categories.map((category) => {
         return <CategoryItem key={category} name={category} />;
       })}

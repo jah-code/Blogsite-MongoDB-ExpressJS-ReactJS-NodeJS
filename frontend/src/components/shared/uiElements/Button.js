@@ -7,7 +7,7 @@ function Button(props) {
     return (
       <Link
         to={props.to}
-        className={`${props.className} button`}
+        className={`${props.className} button transition hover:-translate-y-1`}
         target="props.target || null"
       >
         {props.children}
@@ -16,7 +16,7 @@ function Button(props) {
   }
   return (
     <button
-      className={`${props.className} button`}
+      className={`${props.className} button transition hover:-translate-y-1`}
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
