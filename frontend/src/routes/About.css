@@ -1,0 +1,20 @@
+.p-col {
+    height: 20rem;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.p-row {
+    margin-bottom: 1rem;
+}
+
+.exp-col {
+    height: 27rem;
+    text-align: center;
+}
+
+.date {
+    font-size: 14px;
+    font-style: italic;
+}

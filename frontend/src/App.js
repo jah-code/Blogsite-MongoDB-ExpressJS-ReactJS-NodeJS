@@ -14,6 +14,7 @@ import Card from "./components/shared/uiElements/Card";
 import { AuthContext } from "./components/shared/context/auth-context";
 import { useAuth } from "./components/shared/hooks/auth-hook";
 import "./App.css";
+import About from "./routes/About";
 
 function App() {
   const { userId, token, login, logout } = useAuth();
@@ -24,6 +25,7 @@ function App() {
       <Fragment>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogs/:category" element={<CategoryBlogs />} />
         <Route path="/blogs/:category/:id" element={<SingleBlog />} />
@@ -38,6 +40,7 @@ function App() {
       <Fragment>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogs/:category" element={<CategoryBlogs />} />
         <Route path="/blogs/:category/:id" element={<SingleBlog />} />

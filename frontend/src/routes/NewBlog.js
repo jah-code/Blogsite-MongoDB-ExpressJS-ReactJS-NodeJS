@@ -120,7 +120,7 @@ function NewBlog() {
           element="textarea"
           type="text"
           label="Description"
-          row={20}
+          rows="20"
           validators={[VALIDATOR_MINLENGTH(10)]}
           errorText="Please enter a valid description (at least 10 characters)."
           onInputHandler={onInputHandler}

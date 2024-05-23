@@ -68,7 +68,6 @@ function Input(props) {
         onChange={onChangeHandler}
         value={inputState.value}
         onBlur={onTouchHandler}
-        row={props.row}
       />
     );
 

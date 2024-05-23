@@ -5,7 +5,11 @@ import { Link } from "react-router-dom";
 function Button(props) {
   if (props.to) {
     return (
-      <Link to={props.to} className={`${props.className} button`}>
+      <Link
+        to={props.to}
+        className={`${props.className} button`}
+        target="props.target || null"
+      >
         {props.children}
       </Link>
     );

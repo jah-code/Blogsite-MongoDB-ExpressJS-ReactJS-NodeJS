@@ -30,7 +30,7 @@ function CategoryBlogs() {
           <LoadingSpinner />
         </div>
       )}
-      <CategoryBlogList items={blogsByCategory} />;
+      <CategoryBlogList items={blogsByCategory} />
       <ErrorModal error={error} onClear={clearError} />
     </Fragment>
   );
