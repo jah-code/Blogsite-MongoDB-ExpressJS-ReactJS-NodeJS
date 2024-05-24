@@ -17,12 +17,12 @@ function AboutMe() {
       <div className="grid lg:grid-cols-2 md:grid-cols-1">
         <div className="text-center max-w-80 m-auto">
           <Carousel autoSlide={true} autoSlideInterval={2000}>
-            {slides.map((img) => (
-              <img src={img} />
+            {slides.map((img, i) => (
+              <img src={img} key={i} alt={img} />
             ))}
           </Carousel>
         </div>
-        <div className="p-col">
+        <div className="p-col text-center">
           <h1 className="mb-4">About Me</h1>
           <p>
             Hi, my name is Lijah Garcia, 30 years old, from Tarlac, Philippines.

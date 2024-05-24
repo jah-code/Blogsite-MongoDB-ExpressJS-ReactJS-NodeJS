@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CategoryBlogList from "../components/blogs/CategoryBlogList";
 import { useFetch } from "../components/shared/hooks/request-hook";
@@ -10,7 +10,7 @@ function CategoryBlogs() {
   const { isLoading, error, request, clearError } = useFetch();
   const category = useParams().category;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchBlogs = async () => {
       try {
         const result = await request("http://localhost:8080/api/blogs");
@@ -21,7 +21,9 @@ function CategoryBlogs() {
     fetchBlogs();
   }, []);
 
-  const blogsByCategory = blogs.filter((blog) => blog.category === category);
+  const blogsByCategory = blogs.filter(
+    (blog) => blog.category.toLowerCase() === category
+  );
 
   return (
     <Fragment>

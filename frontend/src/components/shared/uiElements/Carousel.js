@@ -17,7 +17,7 @@ export default function Carousel({
     if (!autoSlide) return;
     const slideInterval = setInterval(next, autoSlideInterval);
     return () => clearInterval(slideInterval);
-  }, []);
+  }, [autoSlide, autoSlideInterval]);
 
   return (
     <div className="overflow-hidden relative">
@@ -46,6 +46,7 @@ export default function Carousel({
         <div className="flex items-center justify-center gap-2">
           {slides.map((_, i) => (
             <div
+              key={i}
               className={`
               transition-all w-3 h-3 bg-white rounded-full
               ${curr === i ? "p-2" : "bg-opacity-50"}

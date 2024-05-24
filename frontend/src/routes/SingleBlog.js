@@ -12,12 +12,14 @@ function SingleBlog() {
 
   useEffect(() => {
     const fetchBlog = async () => {
-      const result = await request(`http://localhost:8080/api/blogs/${blogId}`);
+      const result = await request(
+        `${process.env.REACT_APP_BACKEND_URL}/blogs/${blogId}`
+      );
       setBlog(result.data);
     };
 
     fetchBlog();
-  }, []);
+  }, [request, blogId]);
 
   return (
     <Fragment>

@@ -39,7 +39,7 @@ function UpdateBlog() {
     e.preventDefault();
     try {
       await request(
-        `http://localhost:8080/api/blogs/${blogId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/blogs/${blogId}`,
         "PATCH",
         JSON.stringify({
           title: formState.inputs.title.value,
@@ -58,7 +58,7 @@ function UpdateBlog() {
     const fetchBlogs = async () => {
       try {
         const result = await request(
-          `http://localhost:8080/api/blogs/${blogId}`
+          `${process.env.REACT_APP_BACKEND_URL}/blogs/${blogId}`
         );
         setSelectedBlog(result.data);
         setFormData(

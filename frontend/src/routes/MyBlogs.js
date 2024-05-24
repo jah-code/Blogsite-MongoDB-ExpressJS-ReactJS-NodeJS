@@ -16,7 +16,7 @@ function MyBlogs() {
     const fetchBlogs = async () => {
       try {
         const result = await request(
-          `http://localhost:8080/api/blogs/user/${userId}`
+          `${process.env.REACT_APP_BACKEND_URL}/blogs/user/${userId}`
         );
         setMyBlogs(result.data);
       } catch (err) {}

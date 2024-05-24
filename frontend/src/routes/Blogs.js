@@ -11,7 +11,9 @@ function Blogs() {
   useLayoutEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const result = await request("http://localhost:8080/api/blogs");
+        const result = await request(
+          `${process.env.REACT_APP_BACKEND_URL}/blogs`
+        );
         setBlogs(result.data);
       } catch (err) {}
     };

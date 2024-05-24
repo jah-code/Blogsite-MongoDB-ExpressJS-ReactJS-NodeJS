@@ -1,20 +1,22 @@
-import { Fragment } from "react";
+import { Fragment, lazy, Suspense } from "react";
 import { Route, BrowserRouter, Routes, Navigate } from "react-router-dom";
-import Home from "./routes/Home";
-import Contact from "./routes/Contact";
-import NewBlog from "./routes/NewBlog";
-import MyBlogs from "./routes/MyBlogs";
-import Blogs from "./routes/Blogs";
-import CategoryBlogs from "./routes/CategoryBlogs";
-import SingleBlog from "./routes/SingleBlog";
-import Auth from "./routes/Auth";
+import LoadingSpinner from "./components/shared/uiElements/LoadingSpinner";
 import UpdateBlog from "./components/myBlogs/UpdateBlog";
 import MainNavigation from "./components/shared/navigation/MainNavigation";
 import Card from "./components/shared/uiElements/Card";
 import { AuthContext } from "./components/shared/context/auth-context";
 import { useAuth } from "./components/shared/hooks/auth-hook";
 import "./App.css";
-import About from "./routes/About";
+
+const Home = lazy(() => import("./routes/Home"));
+const Blogs = lazy(() => import("./routes/Blogs"));
+const About = lazy(() => import("./routes/About"));
+const Contact = lazy(() => import("./routes/Contact"));
+const NewBlog = lazy(() => import("./routes/NewBlog"));
+const MyBlogs = lazy(() => import("./routes/MyBlogs"));
+const CategoryBlogs = lazy(() => import("./routes/CategoryBlogs"));
+const SingleBlog = lazy(() => import("./routes/SingleBlog"));
+const Auth = lazy(() => import("./routes/Auth"));
 
 function App() {
   const { userId, token, login, logout } = useAuth();
@@ -71,17 +73,25 @@ function App() {
         <BrowserRouter>
           <MainNavigation />
           <main>
-            <Routes>
-              {routes}
-              <Route
-                path="*"
-                element={
-                  <Card>
-                    <h3>This page cannot be found!</h3>
-                  </Card>
-                }
-              />
-            </Routes>
+            <Suspense
+              fallback={
+                <div className="text-center">
+                  <LoadingSpinner />
+                </div>
+              }
+            >
+              <Routes>
+                {routes}
+                <Route
+                  path="*"
+                  element={
+                    <Card>
+                      <h3>This page cannot be found!</h3>
+                    </Card>
+                  }
+                />
+              </Routes>
+            </Suspense>
           </main>
         </BrowserRouter>
       </div>

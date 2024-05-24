@@ -56,7 +56,7 @@ function NewBlog() {
       );
       formData.append("image", formState.inputs.image.value);
       await request(
-        "http://localhost:8080/api/blogs/add-new",
+        `${process.env.REACT_APP_BACKEND_URL}/blogs/add-new`,
         "POST",
         formData,
         {

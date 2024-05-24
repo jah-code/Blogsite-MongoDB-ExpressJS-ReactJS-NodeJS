@@ -1,0 +1,9 @@
+{
+    "env": {
+        "DB_USER": "lijah",
+        "DB_PASSWORD": "yXPh9WRxQFllb5vk",
+        "DB_NAME": "blogs",
+        "GOOGLE_API_KEY": "AIzaSyDLps6n1cIXLC8j8ihKUDdPRSK0CUSgdTM",
+        "JWT_KEY": "PK_blogpostapp_lae"
+    }
+}

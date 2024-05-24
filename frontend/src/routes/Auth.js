@@ -65,7 +65,7 @@ function Auth() {
     if (isLoginMode) {
       try {
         const result = await request(
-          "http://localhost:8080/api/users/login",
+          `${process.env.REACT_APP_BACKEND_URL}/users/login`,
           "POST",
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -81,7 +81,7 @@ function Auth() {
     } else {
       try {
         const result = await request(
-          "http://localhost:8080/api/users/signup",
+          `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
           "POST",
           JSON.stringify({
             name: formState.inputs.name.value,

@@ -47,7 +47,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://lijah:yXPh9WRxQFllb5vk@cluster0.cdvaodk.mongodb.net/blogs"
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.cdvaodk.mongodb.net/${process.env.DB_NAME}`
   )
   .then(() => {
     app.listen(8080);

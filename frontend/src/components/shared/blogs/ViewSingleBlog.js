@@ -31,7 +31,7 @@ function ViewSingleBlog(props) {
     const fetchUser = async () => {
       try {
         const result = await request(
-          `http://localhost:8080/api/users/${author}`
+          `${process.env.REACT_APP_BACKEND_URL}/users/${author}`
         );
         setAuthName(result.userName);
       } catch (err) {}
@@ -42,9 +42,14 @@ function ViewSingleBlog(props) {
 
   const confirmDeleteHandler = async () => {
     try {
-      await request(`http://localhost:8080/api/blogs/${id}`, "DELETE", null, {
-        Authorization: "Bearer " + auth.token,
-      });
+      await request(
+        `${process.env.REACT_APP_BACKEND_URL}/blogs/${id}`,
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
       navigate("/my-blogs");
     } catch (err) {}
   };
@@ -60,7 +65,7 @@ function ViewSingleBlog(props) {
           )}
           <div className="lg:mx-10 sm:mx-0 img">
             <img
-              src={`http://localhost:8080/${image}`}
+              src={`${process.env.REACT_APP_ASSET_URL}/${image}`}
               alt={title}
               className="object-cover max-h-[450px] size-full"
             />

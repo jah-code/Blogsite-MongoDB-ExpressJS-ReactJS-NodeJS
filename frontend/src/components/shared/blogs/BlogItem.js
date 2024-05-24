@@ -25,21 +25,26 @@ function BlogItem(props) {
     const fetchUser = async () => {
       try {
         const result = await request(
-          `http://localhost:8080/api/users/${author}`
+          `${process.env.REACT_APP_BACKEND_URL}/users/${author}`
         );
         setAuthName(result.userName);
       } catch (err) {}
     };
 
     fetchUser();
-  }, []);
+  }, [request, author]);
 
   const confirmDeleteHandler = async () => {
     setShowDelConfirmation(false);
     try {
-      await request(`http://localhost:8080/api/blogs/${id}`, "DELETE", null, {
-        Authorization: "Bearer " + auth.token,
-      });
+      await request(
+        `${process.env.REACT_APP_BACKEND_URL}/blogs/${id}`,
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
       onDelete(id);
     } catch (err) {}
   };
@@ -51,7 +56,7 @@ function BlogItem(props) {
           {isLoading && <LoadingSpinner asOverLay />}
           <div className="lg:mx-20 sm:mx-0 img">
             <img
-              src={`http://localhost:8080/${image}`}
+              src={`${process.env.REACT_APP_ASSET_URL}/${image}`}
               alt={title}
               className="object-cover h-80 size-full"
             />
