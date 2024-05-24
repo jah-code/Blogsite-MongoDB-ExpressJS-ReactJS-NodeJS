@@ -18,6 +18,20 @@ const getUsers = async (req, res, next) => {
   res.json({ users: users.map((user) => user.toObject({ getter: true })) });
 };
 
+const getUserById = async (req, res, next) => {
+  const userId = req.params.id;
+  let user;
+  try {
+    user = await UserModel.findById(userId);
+  } catch (err) {
+    return next(
+      new HttpError("Fetching user failed, please try again later.", 500)
+    );
+  }
+
+  res.json({ userName: user.name });
+};
+
 const signup = async (req, res, next) => {
   const validationError = validationResult(req);
   if (!validationError.isEmpty()) {
@@ -134,5 +148,6 @@ const login = async (req, res, next) => {
 };
 
 exports.getUsers = getUsers;
+exports.getUserById = getUserById;
 exports.signup = signup;
 exports.login = login;

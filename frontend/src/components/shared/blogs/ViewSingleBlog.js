@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../uiElements/Card";
 import Button from "../uiElements/Button";
@@ -10,10 +10,11 @@ import LoadingSpinner from "../uiElements/LoadingSpinner";
 import ErrorModal from "../uiElements/ErrorModal";
 
 function ViewSingleBlog(props) {
-  const auth = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [authName, setAuthName] = useState();
 
+  const auth = useContext(AuthContext);
   const { userId } = auth;
+  const navigate = useNavigate();
   const { id, image, category, author, title, description, others } = props;
   const { isLoading, error, request, clearError } = useFetch();
 
@@ -25,6 +26,19 @@ function ViewSingleBlog(props) {
 
   const openDelConfirmationHandler = () => setShowDelConfirmation(true);
   const closeDelConfirmationHandler = () => setShowDelConfirmation(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const result = await request(
+          `http://localhost:8080/api/users/${author}`
+        );
+        setAuthName(result.userName);
+      } catch (err) {}
+    };
+
+    fetchUser();
+  }, []);
 
   const confirmDeleteHandler = async () => {
     try {
@@ -54,7 +68,7 @@ function ViewSingleBlog(props) {
           <div className="mt-3">
             <div className="text-2xl">{title}</div>
             <i className="text-xs">
-              Author: {author} * {category}
+              Author: {authName} * {category}
             </i>
             <div className="text-sm mt-3">{description}</div>
           </div>

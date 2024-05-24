@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../shared/uiElements/Card";
 import BlogItem from "../shared/blogs/BlogItem";
 

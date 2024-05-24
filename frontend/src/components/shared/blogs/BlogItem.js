@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useContext } from "react";
+import React, { useState, Fragment, useContext, useEffect } from "react";
 import Card from "../uiElements/Card";
 import Button from "../uiElements/Button";
 import "./BlogItem.css";
@@ -9,6 +9,8 @@ import ErrorModal from "../uiElements/ErrorModal";
 import LoadingSpinner from "../uiElements/LoadingSpinner";
 
 function BlogItem(props) {
+  const [authName, setAuthName] = useState();
+
   const auth = useContext(AuthContext);
   const { userId } = auth;
   const { id, image, category, author, title, description, onDelete } = props;
@@ -18,6 +20,19 @@ function BlogItem(props) {
 
   const openDelConfirmationHandler = () => setShowDelConfirmation(true);
   const closeDelConfirmationHandler = () => setShowDelConfirmation(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const result = await request(
+          `http://localhost:8080/api/users/${author}`
+        );
+        setAuthName(result.userName);
+      } catch (err) {}
+    };
+
+    fetchUser();
+  }, []);
 
   const confirmDeleteHandler = async () => {
     setShowDelConfirmation(false);
@@ -44,7 +59,7 @@ function BlogItem(props) {
           <div className="mt-3">
             <div className="text-2xl">{title}</div>
             <i className="text-xs">
-              Author: {author} * {category.toUpperCase()}
+              Author: {authName} * {category.toUpperCase()}
             </i>
             <div className="text-sm mt-3 line-2-el">{description}</div>
           </div>
