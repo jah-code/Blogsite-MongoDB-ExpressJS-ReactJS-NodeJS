@@ -38,7 +38,8 @@ app.use((error, req, res, next) => {
     });
   }
   if (res.headerSent) {
-    return next(error);
+    console.log("error upload");
+    return next(error + "error upload");
   }
 
   res.status(error.code || 500);
@@ -50,7 +51,7 @@ mongoose
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.cdvaodk.mongodb.net/${process.env.DB_NAME}`
   )
   .then(() => {
-    app.listen(8080);
+    app.listen(process.env.PORT || 8080);
   })
   .catch((err) => {
     console.log(err);
