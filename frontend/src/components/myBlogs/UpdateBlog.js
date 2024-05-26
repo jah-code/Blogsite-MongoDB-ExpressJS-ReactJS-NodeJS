@@ -107,6 +107,7 @@ function UpdateBlog() {
             element="input"
             type="text"
             label="Title"
+            row="20"
             validators={[VALIDATOR_REQUIRE()]}
             errorText="Please enter a valid title."
             onInputHandler={onInputHandler}

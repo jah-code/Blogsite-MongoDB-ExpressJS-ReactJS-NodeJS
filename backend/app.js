@@ -38,7 +38,6 @@ app.use((error, req, res, next) => {
     });
   }
   if (res.headerSent) {
-    console.log("error upload");
     return next(error + "error upload");
   }
 
